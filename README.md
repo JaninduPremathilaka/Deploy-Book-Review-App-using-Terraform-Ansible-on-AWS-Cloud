@@ -1,140 +1,195 @@
-# Book Review App
 
-## Overview
+# Book Review App on Azure Cloud 🚀  
+### Full-Stack Deployment using **Terraform**, **Ansible**, and **Azure Virtual Machines**
 
-**Book Review App** is a modern, full-stack **three-tier web application** that allows users to browse books, read reviews, and submit their own. It demonstrates clean separation of concerns between frontend and backend, and is ideal for hands-on DevOps and cloud deployment practices.
+## 📘 Overview
 
-- **Unauthenticated users** can view book details and existing reviews.
-- **Authenticated users** can register, log in, and submit reviews.
+This is a **customized, cloud-hosted version** of the Book Review App — a full-stack, three-tier web application that enables users to browse books and submit reviews.
 
-This project is part of the **[DevOps Zero to Hero: Docker, K8s, Cloud, CI/CD & 4 Projects](https://www.udemy.com/user/pravin-mishra-30/)** Udemy course and designed to help students practice DevOps tools and cloud infrastructure end-to-end.
+🔧 **Deployed by**: Janindu Premathilaka  
+📦 **Tools Used**: Terraform, Ansible, Azure CLI, Git
 
----
-
-## Architecture
-
-- **Frontend**: Built using **Next.js**, providing server-side rendering and dynamic routing.
-- **Backend**: Powered by **Node.js** and **Express.js**, handling authentication, book data, and reviews.
-- **Database**: Uses **MySQL** with Sequelize ORM.
-  
-This three-tier architecture can be independently deployed, making it ideal for containerization, cloud hosting, and CI/CD implementation.
-
-![Two-tiered-Web-application-architecture](https://github.com/user-attachments/assets/0be7ab58-91d0-4cde-9272-1c74ca783b4c)
-
+Based on the structure taught in the Udemy course *[DevOps Zero to Hero: Docker, K8s, Cloud, CI/CD & 4 Projects](https://www.udemy.com/user/pravin-mishra-30/)*, this project demonstrates **infrastructure provisioning + app configuration + deployment automation** using real-world DevOps workflows.
 
 ---
 
-## Features
+## 🏗️ Architecture
 
-### 🔐 User Authentication
-- User registration and login
-- Email and password-based login
-- Secure authentication using JWT tokens
+- **Infrastructure**: Azure VMs, NSGs, Public IP, NICs (via Terraform)
+- **App Stack**:  
+  - Frontend: Next.js  
+  - Backend: Node.js + Express  
+  - Database: MySQL  
+- **Configuration Management**: Ansible (multi-playbook structure)
+- **CI/CD**: Manual deployment with Terraform + Ansible (can be upgraded to pipelines)
+
+---
+
+## 🌐 Features
+
+### 🧑‍💻 Authentication
+- Register / login with email-password
+- Auth state managed via JWT and React Context
 
 ### 📚 Book Management
-- View all books
-- Fetch detailed info for each book
-- (Future enhancement: Admins can add/edit books)
+- View list of books
+- Book detail view and reviews
 
-### 📝 Review System
-- View reviews for each book
-- Authenticated users can post reviews
-- Each review includes rating, username, and timestamp
-
-### 🔄 State Management & API Integration
-- Frontend dynamically interacts with backend APIs
-- React Context manages global authentication state
+### 📝 Reviews
+- Logged-in users can post reviews
+- Rating, timestamp, username displayed
 
 ---
 
-## Technology Stack
-
-### Frontend
-- [Next.js](https://nextjs.org/) – React framework for SSR and routing  
-- Tailwind CSS – Utility-first CSS framework  
-- Axios – HTTP client for API calls  
-- React Context API – For managing global auth state  
-
-### Backend
-- Node.js & Express.js – REST API development  
-- MySQL & Sequelize – Relational DB and ORM  
-- JWT – Token-based authentication  
-- bcrypt.js – Password hashing  
-- CORS – Cross-origin request handling  
-
----
-
-## Application Structure
+## 💻 Project Structure
 
 ```
-/book-review-app
- ├── /frontend   # Next.js frontend
- ├── /backend    # Node.js & Express backend
- └── README.md   # Project overview
+book-review-app/
+ ├── frontend/               # Next.js frontend
+ ├── backend/                # Express.js backend
+ ├── terraform/              # Infra-as-Code (Azure)
+ │    ├── main.tf
+ │    ├── variables.tf
+ │    ├── terraform.tfvars
+ │    └── outputs.tf
+ ├── ansible/                # Automation config
+ │    ├── inventory.ini
+ │    └── webserver-installation.yml
+ └── README.md               # This file
 ```
 
 ---
 
-## Frontend Directory Layout
+## 📦 Tech Stack
 
-```
-/frontend
- ├── /src
- │   ├── /app
- │   │   ├── page.js          # Home page (list of books)
- │   │   ├── /book/[id]       # Dynamic route for book details
- │   │   ├── /login           # Login page
- │   │   ├── /register        # Register page
- │   ├── /components          # Reusable UI components (Navbar, etc.)
- │   ├── /context             # React Context for auth state
- │   ├── /services            # Axios API functions
- │   ├── /styles              # Tailwind global styles
- ├── next.config.js           # Next.js config
- ├── package.json             # Dependencies and scripts
- └── README.md                # Frontend-specific docs
+### Application
+- **Frontend**: Next.js, Tailwind CSS, Axios
+- **Backend**: Node.js, Express, Sequelize (MySQL), JWT
+- **Database**: MySQL
+
+### DevOps
+- **Terraform**: Azure infrastructure provisioning  
+- **Ansible**: Web server provisioning, app deployment  
+- **Azure**: Cloud provider  
+- **GitHub**: Code source and cloning
+
+---
+
+## 🛠️ Prerequisites
+
+Ensure the following are installed on your local machine:
+- [Terraform](https://developer.hashicorp.com/terraform/downloads) (v1.0+)
+- [Ansible](https://docs.ansible.com/)
+- [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli)
+- SSH Key Pair (`~/.ssh/id_rsa` and `id_rsa.pub`)
+- Git
+
+Then run:
+
+```bash
+az login
 ```
 
 ---
 
-## Backend Directory Layout
+## 🚀 Step-by-Step Deployment
 
+### 1️⃣ Provision Infrastructure (Terraform)
+
+Navigate to the `terraform/` directory and initialize:
+
+```bash
+cd terraform
+terraform init
+terraform plan -var-file="terraform.tfvars"
+terraform apply -var-file="terraform.tfvars"
 ```
-/backend
- ├── /src
- │   ├── /config              # Database config and connection
- │   ├── /models              # Sequelize models (User, Book, Review)
- │   ├── /routes              # Express route handlers
- │   ├── /controllers         # API business logic
- │   ├── /middleware          # JWT auth middleware
- │   └── server.js            # Entry point of the backend server
- ├── package.json             # Dependencies and scripts
- └── README.md                # Backend-specific docs
-```
+
+> ⚠️ Note: After apply, copy the `public_ip_address` output to update the Ansible inventory.
 
 ---
 
-## Setup Instructions
+### 2️⃣ Configure Server & Deploy App (Ansible)
 
-Setup steps for both frontend and backend are provided in their respective folders:
+Update the `ansible/inventory.ini` file:
 
-- [`/frontend/README.md`](./frontend/README.md)
-- [`/backend/README.md`](./backend/README.md)
+```ini
+[web]
+<Your_Public_IP_From_Terraform>
 
-Follow the instructions to install dependencies, configure environment variables, and start the application locally.
+[all:vars]
+ansible_user=azureuser
+ansible_ssh_private_key_file=~/.ssh/id_rsa
+ansible_python_interpreter=/usr/bin/python3
+```
+
+Then run the Ansible playbook:
+
+```bash
+cd ../ansible
+ansible-playbook -i inventory.ini webserver-installation.yml
+```
+
+This will:
+
+- Install Nginx
+- Clone the Book Review App (or your repo)
+- Copy frontend + backend into proper locations
+- Configure and restart the Nginx web server
 
 ---
 
-## About This Project
+## 🌍 Access the App
 
-This project is designed exclusively for the **Udemy course: [DevOps Zero to Hero: Docker, K8s, Cloud, CI/CD & 4 Projects]([https://www.udemy.com](https://www.udemy.com/user/pravin-mishra-30/))**.
+After deployment:
+- 🌐 App URL: `http://<Your_Public_IP>`
 
-Students will gain hands-on experience in:
-- Git, Docker, Kubernetes
-- Terraform, Ansible
-- CI/CD Pipelines
-- AWS & Azure Cloud
-- Full-stack project deployment from scratch
+---
 
-This Book Review App serves as one of the **4 real-world DevOps projects** taught in the course.
+## 📚 Learning Outcome
 
-#### Testing CICD Pipeline
+- Designed real-world cloud architecture with Azure
+- Used **Terraform** to automate infrastructure provisioning
+- Used **Ansible** to automate multi-step app deployment
+- Gained exposure to IaC, SSH, Web Server setup, and full-stack app management
+
+---
+
+## 🧠 Extra Notes
+
+- You can easily extend this setup with:
+  - GitHub Actions for CI/CD
+  - Azure Load Balancer for scalability
+  - Azure Database for managed MySQL
+  - Docker/K8s for containerized deployment
+
+---
+
+## 📢 Credits
+
+App concept based on the Udemy course [DevOps Zero to Hero](https://www.udemy.com/user/pravin-mishra-30/).  
+Terraform + Ansible deployment logic guided by **Mini Finance Lab** in the same course.
+
+**Customized and deployed independently by Janindu Premathilaka.**
+
+---
+
+## 🔗 Useful Links
+
+- [Frontend README](./frontend/README.md)
+- [Backend README](./backend/README.md)
+- [Terraform Docs](./terraform/)
+- [Ansible Playbook](./ansible/)
+
+## 🛠️ Getting Started
+
+1. **Fork** and **clone** this repository to your local environment.  
+2. ⭐ **Star** the repository to show your support and follow updates.
+
+---
+
+## 📌 Connect with Me
+
+- 💼 [LinkedIn – Janindu Premathilaka](https://www.linkedin.com/in/janindupremathilaka)
+
+---
